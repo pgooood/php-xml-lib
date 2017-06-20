@@ -1,6 +1,8 @@
 # pgood xml lib
 Handy wrapper for DOM
 
+Manual is under construction.
+
 Examples
 -------
 ```php
@@ -32,6 +34,12 @@ $newElem = $element->append('new-element');
 
 //move queryed element before new one
 $newElem->before($xml->query('//book[3]')->item(0));
+
+//get root element
+$documentElement = $xml->de();
+
+//get DOMDocument
+$dd = $xml->dd();
 
 //save
 $xml->save('temp.xml');

@@ -33,6 +33,12 @@ $newElem = $element->append('new-element');
 //move queryed element before new one
 $newElem->before($xml->query('//book[3]')->item(0));
 
+//get PHP DOMDocument
+$dd = $xml->dd();
+
+//get root element
+$documentElement = $xml->de();
+
 //save
 $xml->save('temp.xml');
 

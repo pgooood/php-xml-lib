@@ -42,14 +42,16 @@ $dd = $xml->dd();
 //get root element
 $documentElement = $xml->de();
 
-//XSLT Transformation
+/*
+ * XSLT Transformation
+ */
 $tpl = new \pgood\xml\template('tpl.xsl');
 echo $tpl->transform($xml);
 
 /*
  * XPath and namespace
+ * Let's count media:content elements in Yahoo RSS feed
  */
-//Lets's count media:content elements in Yahoo RSS feed
 $xml = new \pgood\xml\xml('https://www.yahoo.com/news/rss/');
 $xml->registerNameSpace('media','http://search.yahoo.com/mrss/');
 $numElemets = $xml->evaluate('count(//media:content)');

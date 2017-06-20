@@ -18,6 +18,9 @@ $price = $xml->evaluate('number(price)',$element);
 //get attribute
 $oldId = $element->id;
 
+//remove attribute
+$element->id = null;
+
 //set attribute
 $element->id = 'newId';
 
@@ -30,11 +33,14 @@ $element->text();
 //append new element
 $newElem = $element->append('new-element');
 
-//save changes
-$xml->save();
-
 //move queryed element before new one
 $newElem->before($xml->query('//book[3]')->item(0));
+
+//remove element
+$newElem->remove();
+
+//save changes
+$xml->save();
 
 //get PHP DOMDocument
 $dd = $xml->dd();
@@ -47,14 +53,6 @@ $documentElement = $xml->de();
  */
 $tpl = new \pgood\xml\template('tpl.xsl');
 echo $tpl->transform($xml);
-
-/*
- * XPath and namespace
- * Let's count media:content elements in Yahoo RSS feed
- */
-$xml = new \pgood\xml\xml('https://www.yahoo.com/news/rss/');
-$xml->registerNameSpace('media','http://search.yahoo.com/mrss/');
-$numElemets = $xml->evaluate('count(//media:content)');
 
 /*
  * XML from scratch
@@ -76,5 +74,19 @@ $newElement1 = $xml->de()->append($xml->create(
 $newElement2 = $xml->de()->append('child-element-tag-name');
 $newElement2->{'element-id'} = 'id value';
 
+//catch up an existed DOMDocument
+$xml2 = new \pgood\xml\xml($newElement2);
+
+//new XML from inline code
+$xml = new \pgood\xml\xml('<?xml version="1.0" encoding="utf-8"?><data>content</data>');
+
 //save
 $xml->save('new-file-name.xml');
+
+/*
+ * XPath and namespace
+ * Let's count media:content elements in Yahoo RSS feed
+ */
+$xml = new \pgood\xml\xml('https://www.yahoo.com/news/rss/');
+$xml->registerNameSpace('media','http://search.yahoo.com/mrss/');
+$numElemets = $xml->evaluate('count(//media:content)');

@@ -1,5 +1,5 @@
-# pgood xml lib
-Handy wrapper for DOM
+# PHP XML lib
+Handy wrapper for the PHP DOM, XPath and XSLTProcessor 
 
 Manual is under construction.
 

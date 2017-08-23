@@ -73,7 +73,7 @@ class xml{
 	static function fixUri($v){
 		$m = null;
 		if(preg_match('/file:\/([^\/]+.*)$/',$v,$m))
-			$v = 'file:///'.$m[1];
+			$v = 'file://'.$m[1];
 		return $v;
 	}
 	function documentURI($v = null){

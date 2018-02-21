@@ -31,8 +31,8 @@ class element{
 		if(is_array($name))
 			foreach($name as $n => $v)
 				if($n) $this->setAttribute($n,$v);
-		if(is_object($value))
-			vdump($value->name());
+		if(!is_scalar($value) && !is_null($value))
+			throw new \Exception('Value must be scalar');
 		return $this->e()->setAttribute($name,$value);
 	}
 	function hasAttribute($name){

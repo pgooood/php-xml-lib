@@ -23,7 +23,10 @@ class template extends cached{
 		}
 	}
 	function xslInclude($path){
-		if($this->de() && !$this->evaluate('count(/xsl:stylesheet/xsl:include[@href="'.htmlspecialchars($path).'"])')){
+		if($this->de()
+			&& !$this->evaluate('count(/xsl:stylesheet/xsl:include[@href="'.htmlspecialchars($path).'"])')
+			&& ($path = $this->getPathRelativeToAnother(parse_url($this->documentURI(),PHP_URL_PATH),$path))
+		){
 			$include = $this->de()->insertBefore(
 				$this->dd()->createElementNS('http://www.w3.org/1999/XSL/Transform','xsl:include')
 				,$this->de()->firstChild);
@@ -48,5 +51,18 @@ class template extends cached{
 			return $proc->transformToXML($xml->dd());
 		}
 		throw new \Exception('Template XML error');
+	}
+	function getPathRelativeToAnother($basePath,$relPath){
+		if(
+			($basePath = str_replace('\\','/',realpath($basePath)))
+			&& ($relPath = str_replace('\\','/',realpath($relPath)))
+			&& ($arBasePath = explode('/',$basePath))
+			&& ($arRelPath = explode('/',$relPath))
+			&& ($arBasePathDiff = array_diff($arBasePath,$arRelPath))
+			&& ($arRelPathDiff = array_diff($arRelPath,$arBasePath))
+		)
+			return str_repeat('../',count($arRelPathDiff) - 1)
+					.implode('/',array_slice($arBasePathDiff,0,-1))
+					.array_slice($arRelPathDiff,-1)[0];
 	}
 }

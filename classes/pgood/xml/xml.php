@@ -50,6 +50,12 @@ class xml{
 	function load($src){
 		$this->dd = @\DOMDocument::load($src);
 		if(!$this->dd) throw new \Exception('xml::load failed <pre>'.print_r($src,1).'</pre>');
+		$this->xpc = new \DOMXPath($this->dd);
+	}
+	function loadHTML($html){
+		$this->dd = @\DOMDocument::loadHTML($html);
+		if(!$this->dd) throw new \Exception('xml::loadHTML failed <pre>'.print_r($html,1).'</pre>');
+		$this->xpc = new \DOMXPath($this->dd);
 	}
 	function importNode($n,$deep = true){
 		if($n instanceof xml && $n->de()) $n = $n->de()->e();
@@ -90,6 +96,7 @@ class xml{
 				$v = $this->xpc->query($query,$node);
 		}else
 			$v = $this->xpc->query($query);
+		if(!$v) throw new \Exception($query);
 		if($v && $v instanceof \DOMNodeList)
 			$v = new nodeList($v);
 		return $v;
@@ -100,6 +107,7 @@ class xml{
 				$v = $this->xpc->evaluate($query,$node);
 		}else
 			$v = $this->xpc->evaluate($query);
+		//if(!$v) throw new \Exception($query);
 		if($v && $v instanceof \DOMNodeList)
 			$v = new nodeList($v);
 		return $v;

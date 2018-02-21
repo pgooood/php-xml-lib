@@ -15,16 +15,24 @@ $title = $xml->evaluate('string(/catalog/book[@id="bk103"]/title)');
 $element = $xml->query('//book[2]')->item(0);
 
 //get subelement value (xpath)
+$price = $element->evaluate('number(price)');
+//or
 $price = $xml->evaluate('number(price)',$element);
 
 //get attribute
 $oldId = $element->id;
+//or
+$oldId = $element->getAttribute('id');
 
 //remove attribute
 $element->id = null;
+//or
+$element->removeAttribute('id');
 
 //set attribute
 $element->id = 'newId';
+//or
+$element->setAttribute('id','newId');
 
 //set text content
 $element->text('new text content');
@@ -35,8 +43,23 @@ $element->text();
 //append new element
 $newElem = $element->append('new-element');
 
-//move queryed element before new one
+//move queryed element before 
 $newElem->before($xml->query('//book[3]')->item(0));
+
+//move queryed element after new one
+$newElem->after($xml->query('//book[1]')->item(0));
+
+//get previous element
+$newElem->prev();
+
+//get next element
+$newElem->next();
+
+//get DOMElement object
+$newElem->e();
+
+//get parent
+$newElem->parent();
 
 //remove element
 $newElem->remove();
@@ -81,6 +104,9 @@ $xml2 = new \pgood\xml\xml($newElement2);
 
 //new XML from inline code
 $xml = new \pgood\xml\xml('<?xml version="1.0" encoding="utf-8"?><data>content</data>');
+
+//parse HTML
+$xml->loadHTML('<html><head><tile>Hello World!</title></head><body><h1>Hello World!</h1></body></html>');
 
 //save
 $xml->save('new-file-name.xml');

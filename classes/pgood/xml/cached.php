@@ -2,6 +2,12 @@
 namespace pgood\xml;
 
 class cached extends xml{
+	protected static $cache;
+	function __construct($v = null){
+		parent::__construct($v);
+		if(!is_array(self::$cache))
+			self::$cache = array();
+	}
 	function init($v){
 		$res = parent::init($v);
 		if($uri = $this->documentURI()){
@@ -28,20 +34,18 @@ class cached extends xml{
 		return $res;
 	}
 	protected function cache($src = false){
-		global $_xmlCache;
 		if($src !== false){
-			if(($uri = cached::normalizePath($src)) && isset($_xmlCache[$uri]))
-				return $_xmlCache[$uri];
+			if(($uri = cached::normalizePath($src)) && isset(self::$cache[$uri]))
+				return self::$cache[$uri];
 		}elseif($uri = cached::normalizePath($this->documentURI())){
-			if(!isset($_xmlCache)) $_xmlCache = array();
-			$_xmlCache[$uri] = $this->dd();
+			if(!isset(self::$cache)) self::$cache = array();
+			self::$cache[$uri] = $this->dd();
 		}
 	}
 	static function clearCache($src){
-		global $_xmlCache;
 		if(($uri = cached::normalizePath($src))
-		   && isset($_xmlCache[$uri])
-		) unset($_xmlCache[$uri]);
+		   && isset(self::$cache[$uri])
+		) unset(self::$cache[$uri]);
 	}
 	static function normalizePath($path){
 		if($path && (!($url = parse_url($path)) || !isset($url['scheme']))){

@@ -4,17 +4,20 @@ namespace pgood\xml;
 class cached extends xml{
 	protected static $cache;
 	function __construct($v = null){
-		parent::__construct($v);
 		if(!is_array(self::$cache))
 			self::$cache = array();
+		parent::__construct($v);
 	}
 	function init($v){
-		$res = parent::init($v);
-		if($uri = $this->documentURI()){
-			if($dd = $this->cache($uri))
-				$res = parent::init($dd);
-			else $this->cache();
+		if(!empty($v)
+			&& is_string($v)
+			&& (preg_match('/\.xml$/i',$v) || filter_var($v,FILTER_VALIDATE_URL) !== false || is_file($v))
+			&& ($dd = $this->cache($v))
+		){
+			return parent::init($dd);
 		}
+		$res = parent::init($v);
+		$this->cache();
 		return $res;
 	}
 	function load($src){
@@ -48,6 +51,9 @@ class cached extends xml{
 		) unset(self::$cache[$uri]);
 	}
 	static function normalizePath($path){
+		$m = null;
+		if(mb_ereg('^file:\/\/([^\/].*)$',$path,$m))
+			$path = 'file:///'.$m[1];
 		if($path && (!($url = parse_url($path)) || !isset($url['scheme']))){
 			if(substr($path,0,1)!='/'){
 				$scriptDir = pathinfo(filter_input(INPUT_SERVER,'SCRIPT_FILENAME'),PATHINFO_DIRNAME);

@@ -168,13 +168,13 @@ class element{
 		if($value===null || $value===false){
 			if($this->hasAttribute($name))
 				$this->removeAttribute($name);
-		}else
+		}elseif(is_scalar($value))
 			$this->setAttribute($name,$value===true ? $name : $value);
 	}
 	function __get($name){
 		switch($name){
 			case 'firstChild':
-				return $this->e()->firstChild;
+				return new element($this->e()->firstChild);
 		}
 		return $this->getAttribute($name);
 	}
